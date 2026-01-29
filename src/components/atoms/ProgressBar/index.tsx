@@ -1,22 +1,25 @@
-import { LinearProgress, type LinearProgressProps, Box, Typography } from '@mui/material';
+import LinearProgress, { type LinearProgressProps } from '@mui/material/LinearProgress';
+import Box from '@mui/material/Box';
+import { Text } from '../Text';
 
 interface ProgressBarProps extends LinearProgressProps {
-    showLabel?: boolean;
+  showLabel?: boolean;
 }
 
-export const ProgressBar = ({ value, showLabel = false, ...props }: ProgressBarProps) => {
-    return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Box sx={{ width: '100%', mr: 1 }}>
-                <LinearProgress variant={props.variant || 'determinate'} value={value} {...props} />
-            </Box>
-            {showLabel && (
-                <Box sx={{ minWidth: 35 }}>
-                    <Typography variant="body2" color="text.secondary">{`${Math.round(
-                        value || 0,
-                    )}%`}</Typography>
-                </Box>
-            )}
-        </Box>
-    );
-};
+export function ProgressBar({ value = 0, showLabel = false, ...props }: ProgressBarProps) {
+  return (
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      <LinearProgress
+        variant="determinate"
+        value={value}
+        sx={{ flex: 1, height: 8, borderRadius: 4 }}
+        {...props}
+      />
+      {showLabel && (
+        <Text variant="body2" color="text.secondary">
+          {Math.round(value)}%
+        </Text>
+      )}
+    </Box>
+  );
+}

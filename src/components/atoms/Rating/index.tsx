@@ -1,5 +1,5 @@
 import MuiRating, { type RatingProps } from '@mui/material/Rating';
 
-export const Rating = (props: RatingProps) => {
-    return <MuiRating {...props} />;
-};
+export function Rating(props: RatingProps) {
+  return <MuiRating readOnly precision={0.5} {...props} />;
+}

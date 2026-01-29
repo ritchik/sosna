@@ -1,5 +1,15 @@
-import MuiBadge, { type BadgeProps } from '@mui/material/Badge';
+import Chip, { type ChipProps } from '@mui/material/Chip';
 
-export const Badge = (props: BadgeProps) => {
-    return <MuiBadge {...props} />;
-};
+interface BadgeProps extends Omit<ChipProps, 'size'> {
+  count?: number;
+}
+
+export function Badge({ count, label, ...props }: BadgeProps) {
+  return (
+    <Chip
+      size="small"
+      label={count !== undefined ? count : label}
+      {...props}
+    />
+  );
+}
