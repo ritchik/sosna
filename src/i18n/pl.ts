@@ -138,14 +138,17 @@ export const pl = {
       tip1: {
         title: 'Porady sprzedażowe',
         description: 'Dodaj więcej zdjęć do swoich ofert, aby zwiększyć konwersję średnio o 23%',
+        button: 'Dowiedz się więcej',
       },
       tip2: {
         title: 'Porady marketingowe',
         description: 'Wykorzystaj promocje sezonowe, aby zwiększyć sprzedaż w okresie świątecznym',
+        button: 'Sprawdź promocje',
       },
       tip3: {
         title: 'Obsługa klienta',
         description: 'Odpowiadaj na zapytania klientów w ciągu 24 godzin, aby uzyskać lepsze oceny',
+        button: 'Zobacz porady',
       },
     },
 
@@ -179,5 +182,6 @@ export const pl = {
       hoursAgo: '{{count}} godz. temu',
       daysAgo: '{{count}} dni temu',
     },
+
   },
 };

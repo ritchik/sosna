@@ -138,14 +138,17 @@ export const en = {
       tip1: {
         title: 'Sales Tips',
         description: 'Add more photos to your listings to increase conversion by an average of 23%',
+        button: 'Learn more',
       },
       tip2: {
         title: 'Marketing Tips',
         description: 'Use seasonal promotions to boost sales during holidays',
+        button: 'Check promotions',
       },
       tip3: {
         title: 'Customer Service',
         description: 'Respond to customer inquiries within 24 hours for better ratings',
+        button: 'View tips',
       },
     },
 

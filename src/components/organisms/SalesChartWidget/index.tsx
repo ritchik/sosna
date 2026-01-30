@@ -1,91 +1,81 @@
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { useTheme } from '@mui/material/styles';
-import { Card } from '../../molecules/Card';
-import { FilterButtonGroup } from '../../molecules/FilterButtonGroup';
-import { Text } from '../../atoms/Text';
+import { BarChart2 } from 'lucide-react';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { IconText } from '../../atoms/IconText';
+import { Divider } from '../../atoms/Divider';
+import { FilterRow } from '../../molecules/FilterRow';
+import { useTheme } from '../../../contexts/ThemeContext';
+import { lightPalette, darkPalette } from '../../../contexts/colors';
 import { getSalesChartData } from '../../../data/mockData';
-
-type Period = 'today' | 'current_week' | 'previous_week';
-type ChartType = 'bar' | 'line';
 
 export function SalesChartWidget() {
   const { t, i18n } = useTranslation();
-  const theme = useTheme();
-  const [period, setPeriod] = useState<Period>('current_week');
-  const [chartType, setChartType] = useState<ChartType>('bar');
+  const { mode } = useTheme();
+  const palette = mode === 'light' ? lightPalette : darkPalette;
+
+  const [period, setPeriod] = useState('Today');
+  const [chartType, setChartType] = useState('Bar');
   const [compare, setCompare] = useState(false);
 
-  const periods = [
-    { key: 'today' as Period, label: t('chart.today') },
-    { key: 'current_week' as Period, label: t('chart.currentWeek') },
-    { key: 'previous_week' as Period, label: t('chart.previousWeek') },
-  ];
-
-  const chartTypes = [
-    { key: 'bar' as ChartType, label: t('chart.bar') },
-    { key: 'line' as ChartType, label: t('chart.line') },
-  ];
+  const periodMap: Record<string, 'today' | 'current_week'> = {
+    'Today': 'today',
+    'Current week': 'current_week',
+  };
 
   const data = useMemo(
-    () => getSalesChartData(period, i18n.language as 'pl' | 'en'),
+    () => getSalesChartData(periodMap[period] || 'today', i18n.language as 'pl' | 'en'),
     [period, i18n.language]
   );
 
-  const primaryColor = theme.palette.primary.main;
-  const secondaryColor = theme.palette.secondary.main;
-  const incompleteColor = theme.palette.grey[400];
-
   return (
-    <Card title={t('chart.title')}>
-      <Box sx={{ display: 'flex', gap: 3, mb: 2, flexWrap: 'wrap' }}>
-        <Box>
-          <Text variant="caption" color="text.secondary">{t('chart.period')}</Text>
-          <FilterButtonGroup
-            options={periods.map((p) => p.label)}
-            selected={periods.find((p) => p.key === period)?.label || ''}
-            onChange={(label) => {
-              const found = periods.find((p) => p.label === label);
-              if (found) setPeriod(found.key);
-            }}
-          />
-        </Box>
-        <Box>
-          <Text variant="caption" color="text.secondary">{t('chart.chartType')}</Text>
-          <FilterButtonGroup
-            options={chartTypes.map((c) => c.label)}
-            selected={chartTypes.find((c) => c.key === chartType)?.label || ''}
-            onChange={(label) => {
-              const found = chartTypes.find((c) => c.label === label);
-              if (found) setChartType(found.key);
-            }}
-          />
-        </Box>
-      </Box>
-
-      <FormControlLabel
-        control={<Checkbox checked={compare} onChange={(e) => setCompare(e.target.checked)} />}
-        label={t('chart.comparePrevious')}
-        sx={{ mb: 2 }}
+    <Box
+      sx={{
+        maxWidth: '1880px',
+        width: '100%',
+        margin: '0 auto',
+        backgroundColor: palette.widget.main,
+        borderRadius: '10px',
+        padding: '24px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '16px',
+      }}
+    >
+      <IconText
+        icon={<BarChart2 size={24} color="currentColor" />}
+        text={t('chart.title')}
+        variant="Label"
       />
 
-      <ResponsiveContainer width="100%" height={250}>
-        {chartType === 'bar' ? (
+      <Divider />
+
+      <FilterRow
+        filters={[
+          { title: 'PERIOD', options: ['Today', 'Current week'], selected: period, onChange: setPeriod },
+          { title: 'CHART TYPE', options: ['Bar', 'Line'], selected: chartType, onChange: setChartType },
+        ]}
+        checkbox={{
+          checked: compare,
+          onChange: () => setCompare(!compare),
+          label: 'Compare with Previous period',
+        }}
+      />
+
+      <ResponsiveContainer width="100%" height={300}>
+        {chartType === 'Bar' ? (
           <BarChart data={data}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
             <YAxis />
             <Tooltip />
-            <Bar dataKey="current" name={t('chart.current')}>
+            <Bar dataKey="current" name="Current">
               {data.map((entry, i) => (
-                <Cell key={i} fill={entry.isIncomplete ? incompleteColor : primaryColor} />
+                <Cell key={i} fill={entry.isIncomplete ? palette.shadow.main : palette.primary.main} />
               ))}
             </Bar>
-            {compare && <Bar dataKey="previous" name={t('chart.previousPeriod')} fill={secondaryColor} />}
+            {compare && <Bar dataKey="previous" name="Previous" fill={palette.secondary.main} />}
           </BarChart>
         ) : (
           <LineChart data={data}>
@@ -93,11 +83,11 @@ export function SalesChartWidget() {
             <XAxis dataKey="name" />
             <YAxis />
             <Tooltip />
-            <Line type="monotone" dataKey="current" name={t('chart.current')} stroke={primaryColor} strokeWidth={2} />
-            {compare && <Line type="monotone" dataKey="previous" name={t('chart.previousPeriod')} stroke={secondaryColor} strokeWidth={2} strokeDasharray="5 5" />}
+            <Line type="monotone" dataKey="current" name="Current" stroke={palette.primary.main} strokeWidth={2} />
+            {compare && <Line type="monotone" dataKey="previous" name="Previous" stroke={palette.secondary.main} strokeWidth={2} strokeDasharray="5 5" />}
           </LineChart>
         )}
       </ResponsiveContainer>
-    </Card>
+    </Box>
   );
 }

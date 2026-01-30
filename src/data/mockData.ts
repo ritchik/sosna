@@ -125,4 +125,57 @@ export function getSalesChartData(period: 'today' | 'current_week' | 'previous_w
     previous: Math.floor(Math.random() * 5000) + 1000,
     isIncomplete: period === 'current_week' && i >= dayIndex,
   }));
+
+
+}
+
+// Product ranking data
+export interface Product {
+  id: string;
+  name: string;
+  iconType: string;
+  soldCount: number;
+  revenue: number;
+}
+
+export const productsData: Record<string, Product[]> = {
+  acc1: [
+    { id: '1', name: 'Wireless Headphones', iconType: 'headphones', soldCount: 234, revenue: 690 },
+    { id: '2', name: 'Keyboard', iconType: 'keyboard', soldCount: 189, revenue: 450 },
+    { id: '3', name: 'Mouse', iconType: 'mouse', soldCount: 156, revenue: 320 },
+    { id: '4', name: 'Monitor', iconType: 'monitor', soldCount: 87, revenue: 1200 },
+  ],
+  acc2: [
+    { id: '1', name: 'T-Shirt', iconType: 'shirt', soldCount: 456, revenue: 890 },
+    { id: '2', name: 'Jeans', iconType: 'shirt', soldCount: 234, revenue: 670 },
+    { id: '3', name: 'Sneakers', iconType: 'footprints', soldCount: 123, revenue: 540 },
+    { id: '4', name: 'Hat', iconType: 'shirt', soldCount: 98, revenue: 180 },
+  ],
+  acc3: [
+    { id: '1', name: 'Lamp', iconType: 'lightbulb', soldCount: 178, revenue: 420 },
+    { id: '2', name: 'Chair', iconType: 'armchair', soldCount: 145, revenue: 890 },
+    { id: '3', name: 'Table', iconType: 'square', soldCount: 67, revenue: 1100 },
+    { id: '4', name: 'Rug', iconType: 'square', soldCount: 45, revenue: 230 },
+  ],
+  acc4: [
+    { id: '1', name: 'Novel', iconType: 'book-open', soldCount: 567, revenue: 340 },
+    { id: '2', name: 'Textbook', iconType: 'library', soldCount: 234, revenue: 560 },
+    { id: '3', name: 'Comics', iconType: 'book', soldCount: 189, revenue: 210 },
+    { id: '4', name: 'Magazine', iconType: 'newspaper', soldCount: 123, revenue: 90 },
+  ],
+  acc5: [
+    { id: '1', name: 'LEGO Set', iconType: 'blocks', soldCount: 89, revenue: 450 },
+    { id: '2', name: 'Doll', iconType: 'smile', soldCount: 67, revenue: 180 },
+    { id: '3', name: 'Puzzle', iconType: 'puzzle', soldCount: 45, revenue: 90 },
+    { id: '4', name: 'Board Game', iconType: 'dices', soldCount: 34, revenue: 120 },
+  ],
+  demo1: [],
+};
+
+export function getProductRanking(accountId: string, sortBy: 'mostPurchased' | 'leastPurchased'): Product[] {
+  const products = productsData[accountId] || [];
+  const sorted = [...products].sort((a, b) =>
+    sortBy === 'mostPurchased' ? b.soldCount - a.soldCount : a.soldCount - b.soldCount
+  );
+  return sorted.slice(0, 4);
 }

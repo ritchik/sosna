@@ -1,13 +1,17 @@
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
 import { useTheme } from '@mui/material/styles';
-import { Logo } from '../../atoms/Logo';
-import { Button } from '../../atoms/Button';
+import { Dropdown } from '../../molecules/DropDown';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useTheme as useAppTheme } from '../../../contexts/ThemeContext';
+import { lightPalette, darkPalette } from '../../../contexts/colors';
+import { IconButton } from '../../atoms/IconButtton';
+import { MoonIcon } from '../../atoms/lucide/moon';
+import { SunIcon } from '../../atoms/lucide/sun';
+import { GlobeIcon } from '../../atoms/lucide/globe';
+import { LogOutIcon } from '../../atoms/lucide/log-out';
+import { CircleUser } from 'lucide-react';
 
 export function Header() {
   const { t, i18n } = useTranslation();
@@ -15,6 +19,8 @@ export function Header() {
   const theme = useTheme();
   const { accounts, currentAccount, switchAccount, logout } = useAuth();
   const { mode, toggleTheme } = useAppTheme();
+
+  const palette = mode === 'light' ? lightPalette : darkPalette;
 
   const handleLogout = () => {
     logout();
@@ -24,44 +30,49 @@ export function Header() {
   return (
     <Box sx={{
       display: 'flex',
+      flexWrap: 'wrap',
       justifyContent: 'space-between',
       alignItems: 'center',
-      p: 2,
+      padding: { xs: '16px', md: '16px 48px', lg: '16px 120px' },
+      gap: '16px',
       bgcolor: theme.palette.background.paper,
       borderBottom: `1px solid ${theme.palette.divider}`,
     }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-        <Logo />
-        <Select
-          value={currentAccount?.id || ''}
-          onChange={(e) => switchAccount(e.target.value)}
-          size="small"
-          sx={{ minWidth: 180 }}
-        >
-          {accounts.map((acc) => (
-            <MenuItem key={acc.id} value={acc.id}>{acc.name}</MenuItem>
-          ))}
-        </Select>
+        <img src="/Logo.svg" alt="Logo" />
       </Box>
 
-      <Box sx={{ display: 'flex', gap: 1 }}>
-        <Button
-          variant="secondary"
-          size="small"
+      <Box sx={{ flex: '1 1 200px', display: 'flex', justifyContent: 'center', minWidth: '200px' }}>
+        <Dropdown
+          icon={<CircleUser size={20} color="currentColor" />}
+          value={currentAccount?.id || ''}
+          options={accounts.map((acc) => ({ value: acc.id, label: acc.name }))}
+          onChange={switchAccount}
+        />
+      </Box>
+
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+        <IconButton
+          icon={<GlobeIcon color="currentColor" />}
+          text={i18n.language.toUpperCase()}
           onClick={() => {
             const newLang = i18n.language === 'pl' ? 'en' : 'pl';
             i18n.changeLanguage(newLang);
             localStorage.setItem('language', newLang);
           }}
-        >
-          {i18n.language.toUpperCase()}
-        </Button>
-        <Button variant="secondary" size="small" onClick={toggleTheme}>
-          {mode === 'dark' ? t('common.light') : t('common.dark')}
-        </Button>
-        <Button variant="text" size="small" color="error" onClick={handleLogout}>
-          {t('common.logout')}
-        </Button>
+        />
+        <IconButton
+          icon={mode === 'dark' ? <SunIcon color="currentColor" /> : <MoonIcon color="currentColor" />}
+          text={mode === 'dark' ? t('common.light') : t('common.dark')}
+          onClick={toggleTheme}
+        />
+        <IconButton
+          icon={<LogOutIcon color="currentColor" />}
+          text={t('common.logout')}
+          borderColor={palette.alert.secondary}
+          textColor={palette.alert.secondary}
+          onClick={handleLogout}
+        />
       </Box>
     </Box>
   );
