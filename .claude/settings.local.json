@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(npm install:*)",
-      "Bash(npm run build:*)",
-      "Bash(timeout 10 bash -c 'cd \"\"C:\\\\Users\\\\marga\\\\Downloads\\\\stud7\\\\ATOMY\\\\atomic-app\"\" && npm run dev 2>&1')"
-    ]
-  }
-}

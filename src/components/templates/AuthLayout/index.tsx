@@ -1,7 +1,6 @@
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import { useTheme } from '@mui/material/styles';
-import { Logo } from '../../atoms/Logo';
 import { Text } from '../../atoms/Text';
 
 interface AuthLayoutProps {
@@ -33,7 +32,7 @@ export function AuthLayout({ children, title }: AuthLayoutProps) {
         }}
       >
         <Box sx={{ mb: 2 }}>
-          <Logo />
+          <img src="/Logo.svg" alt="Logo" style={{ height: 48 }} />
         </Box>
 
         {title && (
@@ -47,3 +46,4 @@ export function AuthLayout({ children, title }: AuthLayoutProps) {
     </Box>
   );
 }
+
